@@ -126,9 +126,10 @@ Reject the whole user file, and keep the defaults, when it has any of:
 - a value the app does not support (a string, unless it supports the label
   extension below).
 
-Name the offending entry and its location in the error, and show it where the
-user will see it, not only in a log. Size limits are the app's choice (Purple:
-16 KiB and 128 entries).
+Recommended, not required: name the offending entry and its location in the
+error, and show it where the user will see it, not only in a log. (Purple
+falls back atomically but logs a generic message.) Size limits are the app's
+choice (Purple: 16 KiB and 128 entries).
 
 ## Optional extension: prefix labels
 

@@ -1,0 +1,27 @@
+; User keymap overlay (shared evilify EDN format).
+; Entries here overlay the app's built-in defaults. Nothing below is active
+; until you remove its ";;". If any entry is invalid, the whole file is ignored,
+; built-in defaults stay active, and the app names the offending entry and line.
+;
+; Each map binds a chord string to:
+;   :command-id   bind the chord to that command (replaces built-in on that chord)
+;   nil           remove the built-in binding on that exact chord in that map
+;   "label"       label a prefix group in which-key (if the app supports labels)
+;
+; Chords use Doom notation: "SPC b p", "C-x", "M-x", "S-g", "RET", "DEL", "<f5>".
+; In the app: SPC h f finds command IDs, SPC h k describes a key, SPC h b lists
+; every active binding, and ? opens the cheatsheet.
+;
+; Named maps (adapt to this app's documented maps, most specific first):
+;   :dialog          active while a modal dialog or sheet is open
+;   :<context>       keys typed after the localleader ("," or "SPC m")
+;   :<pane>          keys active only while that pane has focus
+;   :normal          global Normal-mode bindings
+;   :insert          text-input chords (first stroke must use C-, M-, or s-)
+{
+ ;; :localleader ["," "SPC m"]
+ ;; :normal {"SPC b p" :pin         ; bind a chord to a command
+ ;;          "g s"     nil          ; unbind a built-in chord
+ ;;          "SPC q"   "session"}   ; rename a which-key prefix group
+ ;; :insert {"M-x"     :m-x}        ; keep M-x reachable while typing
+}

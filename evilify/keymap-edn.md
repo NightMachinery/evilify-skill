@@ -131,28 +131,75 @@ error, and show it where the user will see it, not only in a log. (Purple
 falls back atomically but logs a generic message.) Size limits are the app's
 choice (Purple: 16 KiB and 128 entries).
 
-## Optional extension: prefix labels
+## Optional extensions
 
-An app may let a string value label a prefix in which-key:
+Apps that only support the portable subset reject these keys and value types,
+so omit them from keymap files meant to stay portable across every app.
+
+### Prefix labels
+
+An app may let a string value label a prefix in which-key and the status line:
 
 ```clojure
 {:normal {"SPC o" "open"}}
 ```
 
-- Only apps that declare support read it. Others reject string values, which
-  makes the whole file invalid there, so leave labels out of files meant to be
-  portable.
 - A label is presentation only. It names a prefix that has effective children;
   it is never a command and never creates a prefix. A label on a command chord,
   or on a chord with no effective children, is an error.
 - Write the name alone. A `+` marker in front of prefix names is the app's
   decoration, not part of the label.
 
+### Localleader chords (`:localleader`)
+
+An app with object- or page-specific context maps (such as `:task`, `:media`,
+or `:settings`) may declare the chords that activate them in one top-level
+vector:
+
+```clojure
+{:localleader ["," "SPC m"]
+ :task {"d" :task-done
+        "D" :task-drop}}
+```
+
+- Context maps store only the suffix strokes typed after the localleader, so a
+  user can move the localleader in one edit without rewriting every context
+  binding.
+- Every entry in `:localleader` must parse as a valid non-empty chord, must
+  not collide with a reserved chord, and is validated as a prefix across active
+  context maps.
+
+### Deliberately keyless commands (`:keyless`)
+
+An app with keyboard coverage tests may list commands intentionally left
+without a binding under a top-level `:keyless` vector of unqualified command
+keywords:
+
+```clojure
+{:keyless [:bulk-archive-all :cycle-theme-dark]}
+```
+
+- Every entry must name a known command.
+- Coverage tests accept commands in `:keyless` without requiring a chord, and
+  `SPC h f` (describe command) reports them as "no key (on purpose)" while
+  keeping them runnable via `M-x`.
+
+## Starter user file
+
+Recommended, not required: when the app starts and the user's keymap file does
+not exist yet, create it from a concise starter template (see
+[templates/keys-template.edn](templates/keys-template.edn)) containing short
+comments on the syntax, the app's named maps, how to look up command IDs
+(`SPC h f`), and two or three commented-out examples. Never overwrite an
+existing user file, and name the file path at the bottom of the `?` cheatsheet.
+
 ## What each app documents
 
-- where the user's keymap file lives;
+- where the user's keymap file lives (and whether it is auto-created when
+  missing);
 - its named maps, which are active together, and their precedence;
 - the chord spellings and aliases it accepts beyond the portable subset;
 - its reserved chords and required bindings;
 - its size limits;
-- whether it supports prefix labels.
+- which optional extensions it supports (prefix labels, `:localleader`,
+  `:keyless`).

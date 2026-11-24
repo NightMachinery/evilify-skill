@@ -1,3 +1,3 @@
 interface:
   display_name: "Evilify"
-  short_description: "Design and build modal keyboard controls"
+  short_description: "Design and build Doom/Vim modal keyboard interfaces, status line, leader/localleader, which-key, cheatsheet, and M-x"

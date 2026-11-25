@@ -26,16 +26,12 @@ While waiting for additional keystrokes, the dispatcher enters a transient captu
 
 ### Escape ladder (`ESC` and `C-g`)
 
-Outside Insert mode, `ESC` and `C-g` unwind **exactly one layer per press**, in strict order:
+The innermost owner handles one Escape and consumes the press. A credential field or privacy boundary takes precedence over ordinary dispatch and hides private context. Within the active surface:
 
-1. Active transient capture or overlay (pending prefix, which-key, hints, palette, cheatsheet, describe sheet, modal dialog).
-2. Visual mode.
-3. Active multi-item selection.
-4. Selected text-box outline left behind after exiting Insert mode.
-5. Open detail panel or sub-page (returning to the list or parent view).
-6. Active search query or filter.
-
-Never collapse multiple layers in one `ESC` press. Users rely on predictable step-by-step backing out.
+1. Let the input method cancel composition. Otherwise unwind the innermost child prompt, menu, pending prefix or hint.
+2. Leave text entry for Normal. A filter keeps its text and moves focus to its result list; an ordinary editor keeps its input target.
+3. Leave Visual, clear marks, clear the retained input outline, or clear a non-empty filter, one per press. Clearing a filter restores the unfiltered order and keeps the cursor on the same item where it still exists.
+4. Close the current surface or go back one level. Restore the invoking focus if it still exists. Window presentation stays under its own explicit command.
 
 ### Prefix lifecycle and focus safety
 
@@ -146,6 +142,6 @@ Modal interfaces break badly for multilingual and macOS users if key normalizati
 Keep commands and bindings strictly decoupled and continuously verified:
 
 - **One definition per command:** each command declares `id`, `label`, `description`, `when`, `need`, `repeatable`, `palette` (default true), and `run`.
-- **Single-path execution:** a command executed via chord, via `M-x`, or via clicking its native button must run the exact same handler with the same guards, confirmations, and undo behavior. Tag buttons with their command ID (`data-cmd="pin"`) where the framework allows, so clicks, keys, and tooltips share one wiring.
+- **Single-path execution:** a command executed via chord, via `M-x`, or via clicking its native button must run the exact same handler with the same guards, confirmations, and undo behavior. Tag buttons with their command ID (`data-cmd="pin"`) where the framework allows, so clicks, keys, and button labels share one wiring.
 - **Deliberately keyless commands:** commands reached only by name (`M-x`), by a cycling command, or by Avy hints are listed explicitly under `:keyless` in the EDN file (and row/dialog buttons tagged with an opt-out such as `data-keys="none"`). `SPC h f` displays them as `No key (on purpose)`.
 - **Developer docs and `AGENTS.md` rule:** add a rule to the host repository's developer docs and link it from `AGENTS.md`: *every new page, panel, or user action must add its command (and key or `:keyless` entry) in the same change*. Back that rule with an automated coverage test so mouse-only regressions fail CI immediately.

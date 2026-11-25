@@ -2,7 +2,7 @@
 
 Every user-visible surface of an evilified application must look intentional, calm, legible, and native to the host application. Keyboard overlays fail when they look like raw debug panels bolted onto the UI, or when they disappear into fleeting toasts.
 
-This reference specifies the visual foundation and the exact layout, typography, states, and ergonomics of every surface: the modal status line, the docked which-key drawer, the four help views (cheatsheet, live binding reference, describe-key, describe-command), the `M-x` / `SPC SPC` command palette, Avy hints, focus cues, tooltips, and validation banners.
+This reference specifies the visual foundation and the exact layout, typography, states, and ergonomics of every surface: the modal status line, the docked which-key drawer, the four help views (cheatsheet, live binding reference, describe-key, describe-command), the `M-x` / `SPC SPC` command palette, Avy hints, focus cues, visible button shortcuts, and validation banners.
 
 ## Visual Design Foundation
 
@@ -223,16 +223,16 @@ Implement Doom's `counsel-M-x` / `amx` + `orderless` ergonomics:
 - **Multi-word filtering (`orderless`):**
   - Split query on whitespace; **every** token must match in any order.
   - Each token matches if it appears as a case-insensitive substring, matches as a safe case-insensitive regular expression (silently falling back to plain text if invalid regex syntax), or matches the label's word initialism (`mrt` matches `Mark read toggle`).
-  - Search across label, command ID, category/detail, and bound key string.
-  - Sort matching items by shorter label length first, preserving `amx` recency/frequency order on ties.
+  - Search labels, IDs, aliases, details and bindings. Rank exact and prefix name matches before aliases, alternate keyboard-layout spellings and weaker matches. Break ties by existing recency/frequency and label length.
+  - For bilingual names, try both layout directions and deduplicate by stable identity. Search notes and free text literally. Apply visibility rules before matching or displaying snippets. Clearing a list filter restores the advertised source order and the cursor by identity; ignore results from older queries.
 - **Input history:** `M-p` steps backward through previously submitted queries; `M-n` steps forward back to the user's current unsent draft.
 
 ### Palette keyboard controls and focus restoration
 
 - Move selection: `C-n`, `C-j`, `Down`, `Tab` (next, wrapping); `C-p`, `C-k`, `Up`, `S-Tab` (previous, wrapping).
 - Execute: `RET` (runs the active item and records it in history).
-- Cancel: `ESC` or `C-g` (closes immediately and restores focus to the prior element, including returning the caret inside the exact text input when `M-x` was opened from Insert mode).
-- **Subtle footer bar** (`padding: 7px 14px`, `border-top: 1px solid var(--ev-border)`, `font-size: 11px`, `--ev-muted`, `--ev-sunken` background): `C-n/p` move · `RET` run · `M-p/n` history · `ESC` close.
+- Escape or `C-g` closes the palette at once and restores the invoking control and caret. A command palette stays in text entry and moves its selection with `C-n` / `C-p`, so it needs no Normal step. A filterable list, such as unread items or all bindings, follows the Escape ladder instead.
+- **Subtle footer bar** (`padding: 7px 14px`, `border-top: 1px solid var(--ev-border)`, `font-size: 11px`, `--ev-muted`, `--ev-sunken` background): `C-n/p` move · `RET` run · `M-p/n` history · show the current Escape action.
 
 ## Surface 5: Supporting Visual Surfaces
 
@@ -248,10 +248,10 @@ Implement Doom's `counsel-M-x` / `amx` + `orderless` ergonomics:
 - **Active pane:** mark the focused pane with a clean `2px` top (or left) accent border (`var(--ev-accent)`) so the user sees instantly which pane `j`/`k` controls. Avoid loud full-perimeter boxes.
 - **Selected text box:** when `ESC` exits Insert mode, apply a quiet `1.5px dashed var(--ev-accent)` outline to that input so the user knows `i` jumps straight back into it. Remove the outline on the next `ESC` or focus move.
 
-### Live tooltips and disabled explanations
+### Visible shortcuts and disabled explanations
 
-- **Key-teaching tooltips:** every command-bound button displays its live shortcut from the effective keymap (`Pin item  (p)`), never a stale hardcoded string.
-- **Single-source disabled state:** derive `disabled` and the reason tooltip together so a disabled button always explains *why* it is disabled, and scope hover highlights to `:hover:not(:disabled)`.
+- Put the effective key beside each button label, including Back and Cancel. Give icon buttons a visible keycap and an accessible name. A focus-only Return cue appears when the button owns focus.
+- **Single-source disabled state:** derive `disabled` and its accessible explanation together; make the reason available to keyboard users, and scope hover highlights to `:hover:not(:disabled)`.
 
 ### User keymap validation banner
 

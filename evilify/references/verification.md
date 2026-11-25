@@ -19,7 +19,7 @@ Run these in fast unit tests (headless, no manual clicking required):
 - **Command and button coverage tests:**
   - Fails on any registered command that has no binding and is not listed under `:keyless`.
   - Fails on any interactive button missing both a command wiring (`data-cmd` or framework equivalent) and an explicit opt-out (`data-keys="none"`).
-  - Fails on any button wiring that references a nonexistent command ID.
+  - Remap a command and verify its button, accessible shortcut, help and dispatcher agree. Check focused activation on keyless buttons and reject unknown IDs.
 - **`M-x` ranking and matching tests:**
   - Empty query orders top-N recent commands first, then frequency, then shorter labels, then alphabetical.
   - Multi-word `orderless` queries match in any order via plain substring, safe regex (invalid regex syntax does not throw), and word initialisms.
@@ -33,7 +33,7 @@ Exercise the actual application (browser automation, desktop UI harness, or real
 - **Leader and localleader lifecycle:**
   - `SPC` updates status line to `LEADER` at 0ms; pausing reveals docked which-key drawer; `DEL` pops one stroke (`SPC b` -> `SPC`); `ESC` cancels; unknown ending (`SPC b q`) shows undefined notice and does not fall through to run `q`.
   - `,` and `SPC m` update status line to `LOCAL` with active context name, open context continuations in which-key, and when no context map applies show a notice and swallow the next keystroke.
-- **Counts and repeats:** `5j` repeats repeatable motions 5 times, echoes `5` on the status line, caps pathological counts, and does not repeat non-repeatable actions.
+- **Counts and repeats:** verify `5j`, count echo and count limits. Hold a motion to scroll; hold Return over an action or confirmation and verify a single activation.
 - **Focus, pane, and window transitions:** switching pane, tab, account, dialog, or window cancels any pending prefix, count, or hints; active maps stay frozen across strokes of an in-flight chord.
 - **IME, non-Latin layouts, and macOS `M-`:**
   - IME composition (`isComposing`) and native Insert typing work undisturbed.
@@ -41,6 +41,7 @@ Exercise the actual application (browser automation, desktop UI harness, or real
   - macOS `Option` (`M-x`, `M-p`, `M-n`) matches by physical key without leaking accented/symbol characters into focused inputs.
 - **Chord vs palette vs mouse parity:** invoking a command via shortcut, via `M-x` / `SPC SPC`, and via mouse button calls the exact same handler with identical applicability checks, confirmations, and undo behavior.
 - **Hints safety:** Avy hints skip scrolled-out or overlay-occluded targets, narrow cleanly as prefix letters are typed, and cancel cleanly if the target mutates or disappears before activation.
+- **Filtering:** filter to zero, clear while a request is pending, and activate the highlighted result after a reorder. Verify its identity, focus and visible position. Test a synonym, a name in both keyboard layouts, and literal-only notes.
 - **Mode-off fallback:** when modal operation is toggled off (in apps with a toggle), native application shortcuts and typing behave identically to stock.
 
 ## 3. Visual and Screenshot Audit
@@ -64,6 +65,6 @@ Inspect real rendered screenshots (never assume CSS or native layout looks right
   - Active row left accent bar, matched-character highlights, subtle secondary metadata, right-aligned live keycaps, and footer hint bar all have strong contrast and calm visual rhythm.
 - **Avy hints, focus cues, and error banner:**
   - Hint tags remain legible over both light and dark backgrounds and highlight typed prefixes cleanly.
-  - Active pane accent line, post-`Esc` dashed input outline, live keycap tooltips, and the invalid `keys.edn` banner are all crisp and unobtrusive.
+  - Active pane accent line, post-`Esc` dashed input outline, visible button shortcuts, and the invalid `keys.edn` banner are all crisp and unobtrusive.
 
 Keep live-account fixtures and temporary inspection screenshots out of shared repositories; store scratch captures in your scratch directory.

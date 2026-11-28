@@ -33,7 +33,7 @@ Exercise the actual application (browser automation, desktop UI harness, or real
 - **Leader and localleader lifecycle:**
   - `SPC` updates status line to `LEADER` at 0ms; pausing reveals docked which-key drawer; `DEL` pops one stroke (`SPC b` -> `SPC`); `ESC` cancels; unknown ending (`SPC b q`) shows undefined notice and does not fall through to run `q`.
   - `,` and `SPC m` update status line to `LOCAL` with active context name, open context continuations in which-key, and when no context map applies show a notice and swallow the next keystroke.
-- **Counts and repeats:** verify `5j`, count echo and count limits. Hold a motion to scroll; hold Return over an action or confirmation and verify a single activation.
+- **Counts and repeats:** verify `5j`, count echo and count limits. Hold a motion to scroll; hold Return over an action or confirmation and verify a single activation. Synthetic key events usually carry no autorepeat: test held-key timing with a fake clock in unit tests, and ask a human for one physical check.
 - **Focus, pane, and window transitions:** switching pane, tab, account, dialog, or window cancels any pending prefix, count, or hints; active maps stay frozen across strokes of an in-flight chord.
 - **IME, non-Latin layouts, and macOS `M-`:**
   - IME composition (`isComposing`) and native Insert typing work undisturbed.

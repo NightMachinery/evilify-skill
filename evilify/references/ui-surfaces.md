@@ -230,6 +230,7 @@ Implement Doom's `counsel-M-x` / `amx` + `orderless` ergonomics:
 ### Palette keyboard controls and focus restoration
 
 - Move selection: `C-n`, `C-j`, `Down`, `Tab` (next, wrapping); `C-p`, `C-k`, `Up`, `S-Tab` (previous, wrapping).
+- **First match is active:** the leading result is selected when the picker opens and after every query edit, so typing then `RET` takes it.
 - Execute: `RET` (runs the active item and records it in history).
 - Escape or `C-g` closes the palette at once and restores the invoking control and caret. A command palette stays in text entry and moves its selection with `C-n` / `C-p`, so it needs no Normal step. A filterable list, such as unread items or all bindings, follows the Escape ladder instead.
 - **Subtle footer bar** (`padding: 7px 14px`, `border-top: 1px solid var(--ev-border)`, `font-size: 11px`, `--ev-muted`, `--ev-sunken` background): `C-n/p` move · `RET` run · `M-p/n` history · show the current Escape action.

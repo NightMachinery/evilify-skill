@@ -136,6 +136,7 @@ Modal interfaces break badly for multilingual and macOS users if key normalizati
 - **Insert mode and IME composition:** never intercept plain characters while an input has focus or while IME composition (`isComposing` / dead-key composition) is active.
 - **macOS Option (`M-`) chords:** macOS Option transforms letters into symbols (`Option-x` -> `≈`, `Option-p` -> `π`). Match `M-` chords by physical key (`Alt` + `KeyX` -> `M-x`, `Alt` + `KeyP` -> `M-p`), and call `preventDefault()` when a `M-` binding matches so stray symbols are never inserted into inputs.
 - **Platform shortcuts:** preserve native OS and browser bindings (`Cmd+C`, `Cmd+V`, `Cmd+X`, `Cmd+A`, `Cmd+Z`, `Cmd+Q`, `Cmd+W`, `Cmd+Tab`, `Cmd+L`) unless the application explicitly owns a safe in-app override.
+- **Focused surfaces win their own chords:** an app-wide shortcut on the same chord (next chat, next tab) must not swallow a key the focused list or picker handles. Claim the chord in the toolkit's override phase (Qt `ShortcutOverride`, a capturing `keydown` on the web) only while that surface is visible, enabled and in the active window.
 
 ## Command Registry, Keyless Commands, and Coverage
 
